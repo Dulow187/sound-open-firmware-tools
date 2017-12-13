@@ -10,57 +10,71 @@ set -e
 # M4 preprocessor flags
 M4_FLAGS="-I ../ -I ../m4"
 
-# Simple component test cases
-# can be used on components with 1 sink and 1 source.
-SIMPLE_TESTS=(test-ssp test-src-ssp)
-
-# process m4 simple tests -
-# simple_test(name, pipe_name, be_name, format, dai_id, dai_format, dai_phy_bits, dai_data_bits dai_bclk)
-# 1) name - test filename suffix
-# 2) pipe_name - test component pipeline filename in sof/
-# 3) be_name - BE DAI link name in machine driver, used for matching
-# 4) format - PCM sample format
-# 5) dai_id - SSP port number
-# 6) dai_format - SSP sample format
-# 7) dai_phy_bits - SSP physical number of BLKCs per slot/channel
-# 8) dai_data_bits - SSP number of valid daat bits per slot/channel
-# 9) dai_bclk - SSP BCLK in HZ
+# process m4 simple tests - 
+# simple_test(name prefix, name suffix, pipe_name, be_name, format,
+#             dai_id, dai_format, dai_phy_bits, dai_data_bits dai_bclk)
+# 1) test filename prefix
+# 2) test file name suffix
+# 3) pipe_name - test component pipeline filename in sof/
+# 4) be_name - BE DAI link name in machine driver, used for matching
+# 5) format - PCM sample format
+# 6) dai_id - SSP port number
+# 7) dai_format - SSP sample format
+# 8) dai_phy_bits - SSP physical number of BLKCs per slot/channel
+# 9) dai_data_bits - SSP number of valid daat bits per slot/channel
+# 10) dai_bclk - SSP BCLK in HZ
 #
+
 function simple_test {
-	for i in ${SIMPLE_TESTS[@]}
-	do
-		TFILE="$i$5-$4-48k-$1"
-		echo "M4 pre-processing test $i -> ${TFILE}"
+		TFILE="$1$6-$3-$5-$7-48k-$2"
+		echo "M4 pre-processing test $2 -> ${TFILE}"
 		m4 ${M4_FLAGS} \
-			-DTEST_PIPE_NAME="$2" \
-			-DTEST_DAI_LINK_NAME="$3" \
-			-DTEST_SSP_PORT=$5 \
-			-DTEST_SSP_FORMAT=$6 \
-			-DTEST_PIPE_FORMAT=$4 \
-			-DTEST_SSP_BCLK=$9 \
-			-DTEST_SSP_PHY_BITS=$7 \
-			-DTEST_SSP_DATA_BITS=$8 \
-			$i.m4 > ${TFILE}.conf
-		echo "Compiling test $i -> ${TFILE}.tplg"
+			-DTEST_PIPE_NAME="$3" \
+			-DTEST_DAI_LINK_NAME="$4" \
+			-DTEST_SSP_PORT=$6 \
+			-DTEST_SSP_FORMAT=$7 \
+			-DTEST_PIPE_FORMAT=$5 \
+			-DTEST_SSP_BCLK=$10 \
+			-DTEST_SSP_PHY_BITS=$8 \
+			-DTEST_SSP_DATA_BITS=$9 \
+			$1.m4 > ${TFILE}.conf
+		echo "Compiling test $1 -> ${TFILE}.tplg"
 		alsatplg -v 1 -c ${TFILE}.conf -o ${TFILE}.tplg
-	done
 }
 
 # Pre-process the simple tests
-simple_test nocodec passthrough "NoCodec" s16le 2 s16le 20 16 1920000
-simple_test nocodec passthrough "NoCodec" s24le 2 s24le 25 24 2400000
-simple_test nocodec volume "NoCodec" s16le 2 s16le 20 16 1920000
-simple_test nocodec volume "NoCodec" s24le 2 s24le 25 24 2400000
-simple_test nocodec volume "NoCodec" s16le 2 s24le 25 24 2400000
+# no codec
+simple_test test-ssp nocodec passthrough "NoCodec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp nocodec passthrough "NoCodec" s24le 2 s24le 25 24 2400000
 
-simple_test codec passthrough "SSP2-Codec" s16le 2 s16le 20 16 1920000
-simple_test codec passthrough "SSP2-Codec" s24le 2 s24le 25 24 2400000
-simple_test codec volume "SSP2-Codec" s16le 2 s16le 20 16 1920000
-simple_test codec volume "SSP2-Codec" s24le 2 s24le 25 24 2400000
-simple_test codec volume "SSP2-Codec" s16le 2 s24le 25 24 2400000
+simple_test test-ssp nocodec src "NoCodec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp nocodec src "NoCodec" s24le 2 s24le 25 24 2400000
 
-simple_test baytrail passthrough "Baytrail Audio" s16le 2 s16le 20 16 1920000
-simple_test baytrail passthrough "Baytrail Audio" s24le 2 s24le 25 24 2400000
-simple_test baytrail volume "Baytrail Audio" s16le 2 s16le 20 16 1920000
-simple_test baytrail volume "Baytrail Audio" s24le 2 s24le 25 24 2400000
-simple_test baytrail volume "Baytrail Audio" s16le 2 s24le 25 24 2400000
+simple_test test-ssp nocodec volume "NoCodec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp nocodec volume "NoCodec" s24le 2 s24le 25 24 2400000
+simple_test test-ssp nocodec volume "NoCodec" s16le 2 s24le 25 24 2400000
+simple_test test-ssp nocodec volume "NoCodec" s24le 2 s16le 20 16 1920000
+
+# codec
+simple_test test-ssp codec passthrough "SSP2-Codec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp codec passthrough "SSP2-Codec" s24le 2 s24le 25 24 2400000
+
+simple_test test-ssp codec src "SSP2-Codec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp codec src "SSP2-Codec" s24le 2 s24le 25 24 2400000
+
+simple_test test-ssp codec volume "SSP2-Codec" s16le 2 s16le 20 16 1920000
+simple_test test-ssp codec volume "SSP2-Codec" s24le 2 s24le 25 24 2400000
+simple_test test-ssp codec volume "SSP2-Codec" s16le 2 s24le 25 24 2400000
+simple_test test-ssp codec volume "SSP2-Codec" s24le 2 s16le 20 16 1920000
+
+# Baytrail Audio
+simple_test test-ssp baytrail passthrough "Baytrail Audio" s16le 2 s16le 20 16 1920000
+simple_test test-ssp baytrail passthrough "Baytrail Audio" s24le 2 s24le 25 24 2400000
+
+simple_test test-ssp baytrail src "Baytrail Audio" s16le 2 s16le 20 16 1920000
+simple_test test-ssp baytrail src "Baytrail Audio" s24le 2 s24le 25 24 2400000
+
+simple_test test-ssp baytrail volume "Baytrail Audio" s16le 2 s16le 20 16 1920000
+simple_test test-ssp baytrail volume "Baytrail Audio" s24le 2 s24le 25 24 2400000
+simple_test test-ssp baytrail volume "Baytrail Audio" s16le 2 s24le 25 24 2400000
+simple_test test-ssp baytrail volume "Baytrail Audio" s24le 2 s16le 20 16 1920000

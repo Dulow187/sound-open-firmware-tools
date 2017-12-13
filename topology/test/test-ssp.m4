@@ -29,7 +29,7 @@ include(`dsps/byt.m4')
 #
 
 #
-# Define the pipeline
+# Define the pipeline (passthrough, volume, src options)
 #
 # PCM0 <---> SSP TEST_SSP_PORT
 #
