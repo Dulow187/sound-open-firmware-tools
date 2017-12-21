@@ -20,7 +20,7 @@ include(`dsps/byt.m4')
 #
 
 # DAI Link Name
-define(`TEST_DAI_LINK_NAME', `Baytrail Audio')
+define(`TEST_DAI_LINK_NAME', `SSP2-Codec')
 
 #
 # Define the pipeline
