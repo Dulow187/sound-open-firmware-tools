@@ -28,7 +28,7 @@ assist in debugging :-
 
 e.g. convert to flat binary, then ELF then dissasemble
 
-rimage -i /lib/firmware/intel/reef-byt.ri -o image.bin -b -m byt
+rimage -i /lib/firmware/intel/sof-byt.ri -o image.bin -b -m byt
 
 xtensa-byt-elf-objcopy -I binary -O elf32-xtensa-le -B xtensa image.bin image.bin.elf
 
