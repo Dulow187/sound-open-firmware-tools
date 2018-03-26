@@ -65,7 +65,7 @@ PCM_DUPLEX_ADD(Passthrough, 3, 0, 0, PIPELINE_PCM_1, PIPELINE_PCM_2)
 # BE configurations - overrides config in ACPI if present
 #
 DAI_CONFIG(SSP, 4, SSP4-Codec, DSP_B, 32,
-	DAI_CLOCK(mclk, 24576000, slave),
-	DAI_CLOCK(bclk, 12288000, slave),
-	DAI_CLOCK(fsync, 48000, slave),
+	DAI_CLOCK(mclk, 24576000, codec_slave),
+	DAI_CLOCK(bclk, 12288000, codec_slave),
+	DAI_CLOCK(fsync, 48000, codec_slave),
 	DAI_TDM(8, 32, 15, 15))
