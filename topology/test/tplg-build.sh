@@ -113,7 +113,10 @@ simple_test nocodec volume "NoCodec" s16le 4 s32le 32 32 3072000 24576000 I2S
 simple_test nocodec volume "NoCodec" s24le 4 s32le 32 32 3072000 24576000 I2S
 simple_test nocodec volume "NoCodec" s32le 4 s32le 32 32 3072000 24576000 I2S
 simple_test nocodec volume "NoCodec" s32le 4 s32le 32 32 3072000 24576000 LEFT_J
+simple_test codec volume "SSP1-Codec" s16le 1 s16le 16 16 1536000 24576000 I2S
 simple_test codec volume "SSP4-Codec" s16le 4 s16le 16 16 1536000 24576000 I2S
+simple_test codec volume "SSP5-Codec" s16le 5 s16le 16 16 1536000 24576000 I2S
+simple_test codec passthrough "SSP5-Codec" s16le 5 s16le 16 16 1536000 24576000 I2S
 simple_test nocodec volume "NoCodec" s16le 5 s16le 16 16 1536000 24576000 I2S
 simple_test nocodec src "NoCodec" s24le 4 s24le 32 24 3072000 24576000 I2S
 
